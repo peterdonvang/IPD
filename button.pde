@@ -5,7 +5,7 @@ class Button
     int ypos;
     int diam;
     int rad;
-    
+    color buttonColor = color(#485F83);
     
     boolean conLeft;
     boolean conRight;
@@ -25,6 +25,7 @@ class Button
         diam = _diam;
         rad = diam / 2;
         noStroke();
+        fill(buttonColor);
         buttonBody = createShape(ELLIPSE, xpos, ypos, diam, diam);
     }
     

@@ -4,9 +4,8 @@ static int screenheight = 842;
 static int inset = 130;
 static int buttonDiam = IPD.screenwidth / 3;
 
+Button button;
 // study life -------------------------------------------------------
-
-
 TextBox cantinaBox;
 TextBox smallCafeBox;
 TextBox libraryBox;
@@ -15,7 +14,6 @@ TextBox mirrorBox;
 TextBox studyHallBox;
 
 //nav buttons
-Button button;
 Button navButtonL1;
 Button navButtonL2;
 Button navButtonL3;
@@ -64,7 +62,6 @@ String[] jobStrings;
 Job[] jobs;
 
 
-
 color baseColor = color(255);
 color mouseOverColor = color(#2F6BC9);
 
@@ -78,7 +75,7 @@ boolean whatIsPage;
 boolean jobsPage;
 
 // container for current page
-//String currentPage;
+// String currentPage;
 
 // backgrounds
 PImage mainBackground;
@@ -103,30 +100,10 @@ void setup()
 {
     // instantiate
     mainBackground = loadImage("PHmainBackground.png");
+    button = new Button(screenwidth - inset, screenheight - inset, buttonDiam);
+    
+    // study Page-------------------------------------------
     studyBackground = loadImage("placeholderMap.png");
-    whatIsBackground = loadImage("PHwhatIsBackground.png");
-    jobsBackground = loadImage("PHjobsBackground.png");
-  
-    mainPage = true;
-    studyPage = false;
-    whatIsPage = false;
-    jobsPage = false;
-    //currentPage = "mainPage";
-    background(mainBackground);
-    
-    // array for holding job titles
-    jobStrings = loadStrings("jobs.txt");
-    // array of class:Job
-    jobs = new Job[jobStrings.length];
-    
-    //populate jobs array
-    for (int i = 0; i<jobStrings.length;i++)
-    {
-      jobs[i] = new Job();
-      jobs[i].title = jobStrings[i]; // give each job a title
-      jobs[i].ypos = i*jobs[i].spacing; // set each jobs position on screen
-      jobs[i].alpha = 255; //set each jobs alpha value
-    }
     
     // load all descriptions into text arrays
     cantinaArray = loadStrings("theCantina.txt");
@@ -143,9 +120,12 @@ void setup()
     bridgeText = join(bridgeArray, "\n");
     cantinaText = join(cantinaArray, "\n");
     studyHallText = join (studyHallArray, "\n");
-    
-       //instantiate things
-    button = new Button(screenwidth - inset, screenheight - inset, buttonDiam);
+    cantinaBox = new TextBox(cantinaText, 10, button.ypos - button.rad, cantinaX, cantinaY); // xpos, ypos, lineEndX, lineEndY
+    smallCafeBox = new TextBox(smallCafeText, 10, button.ypos - button.rad, smallCafeX, smallCafeY);
+    libraryBox = new TextBox(libraryText, 10, button.ypos - button.rad, libraryX, libraryY);
+    bridgeBox = new TextBox(bridgeText, 10, button.ypos - button.rad, bridgeX, bridgeY);
+    mirrorBox = new TextBox(mirrorText, 10, button.ypos - button.rad, mirrorX, mirrorY);
+    studyHallBox = new TextBox(studyHallText, 10, button.ypos - button.rad, studyHallX, studyHallY);
     
     // make nav buttons and put in array
     navButtonL1 = new Button(width/2 -navButtonSpacing/2, height-30, 20);
@@ -162,54 +142,76 @@ void setup()
     navButtons[3] = navButtonR1;
     navButtons[4] = navButtonR2;
     navButtons[5] = navButtonR3;
+
+    // jobs page----------------------------------------------
+    jobsBackground = loadImage("PHjobsBackground.png");
+    jobStrings = loadStrings("jobs.txt");
+    jobs = new Job[jobStrings.length];
     
+    for (int i = 0; i<jobStrings.length;i++) //populate jobs array
+    {
+      jobs[i] = new Job();
+      jobs[i].title = jobStrings[i]; // give each job a title
+      jobs[i].ypos = i*jobs[i].spacing; // set each jobs position on screen
+      jobs[i].alpha = 255; //set each jobs alpha value
+    }
+    // what is page ------------------------------------------
+    whatIsBackground = loadImage("PHwhatIsBackground.png");
+  
     studyBubble = new Bubble(inset, button.ypos, button.diam - 15, button.diam - 15);
     whatIsBubble = new Bubble(screenwidth / 3, screenheight / 2, button.diam - 15, button.diam - 15);
     jobsBubble = new Bubble(button.xpos, screenheight/2, button.diam - 15, button.diam - 15);
     scrollingBox = new ScrollingBox();
     
-    cantinaBox = new TextBox(cantinaText, 10, button.ypos - button.rad, cantinaX, cantinaY); // xpos, ypos, lineEndX, lineEndY
-    smallCafeBox = new TextBox(smallCafeText, 10, button.ypos - button.rad, smallCafeX, smallCafeY);
-    libraryBox = new TextBox(libraryText, 10, button.ypos - button.rad, libraryX, libraryY);
-    bridgeBox = new TextBox(bridgeText, 10, button.ypos - button.rad, bridgeX, bridgeY);
-    mirrorBox = new TextBox(mirrorText, 10, button.ypos - button.rad, mirrorX, mirrorY);
-    studyHallBox = new TextBox(studyHallText, 10, button.ypos - button.rad, studyHallX, studyHallY);
+    
+    switchPage(mainBackground);
 }
-  
 
 void draw()
 {
-    if (studyPage)
+    if (mainPage)
+    {
+        background(mainBackground);
+        button.draw();
+    }
+    else if (studyPage)
     {
         background(studyBackground);
-        //image(studyBackground, mouseX-screenwidth/2, 0);
+        //image(studyBackground, mouseX-screenwidth/2, 0); image you can drag with mouse
         //button.draw();
-          
+        
+
         if (keyPressed)
         {
             if (key == '1')
             {
               cantinaBox.draw();
+              println("cantina box");
             }
             else if ( key == '2')
             {
                 smallCafeBox.draw();
+                println("small cafe box");
             }
             else if ( key == '3')
             {
                 libraryBox.draw();
+                println("library box");
             }
             else if ( key == '4')
             {
                 bridgeBox.draw();
+                println("bridge box");
             }
             else if ( key == '5')
             {
                 mirrorBox.draw();
+                println("mirror box");
             }
             else if ( key == '6')
             {
                 studyHallBox.draw();
+                println("study hall box");
             }  
             
         }
@@ -217,11 +219,11 @@ void draw()
             
 
         
-        //navButtonL1.isOver = false;
+        navButtonL1.isOver = false;
         
-        //// check if over navigation buttons
-        //if (navButtonL1.conLeft && navButtonL1.conRight && navButtonL1.conTop && navButtonL1.conBottom)
-        //{
+        // // check if over navigation buttons
+        // if (navButtonL1.conLeft && navButtonL1.conRight && navButtonL1.conTop && navButtonL1.conBottom)
+        // {
         //    navButtonL1.isOver = true;
         //    navButtonL1.drawMouseOver();
         //    navButtonL1.draw();
@@ -230,9 +232,9 @@ void draw()
         //    navButtonR1.draw();
         //    navButtonR2.draw();
         //    navButtonR3.draw();
-        //} 
-        //else if (navButtonL2.conLeft && navButtonL2.conRight && navButtonL2.conTop && navButtonL2.conBottom)
-        //{
+        // } 
+        // else if (navButtonL2.conLeft && navButtonL2.conRight && navButtonL2.conTop && navButtonL2.conBottom)
+        // {
         //    navButtonL2.isOver = true;
         //    navButtonL1.draw();
         //    navButtonL2.drawMouseOver();
@@ -240,9 +242,9 @@ void draw()
         //    navButtonR1.draw();
         //    navButtonR2.draw();
         //    navButtonR3.draw();
-        //} 
-        //else if (navButtonL3.conLeft && navButtonL3.conRight && navButtonL3.conTop && navButtonL3.conBottom)
-        //{
+        // } 
+        // else if (navButtonL3.conLeft && navButtonL3.conRight && navButtonL3.conTop && navButtonL3.conBottom)
+        // {
         //    navButtonL3.isOver = true;
         //    navButtonL1.draw();
         //    navButtonL2.draw();
@@ -250,9 +252,9 @@ void draw()
         //    navButtonR1.draw();
         //    navButtonR2.draw();
         //    navButtonR3.draw();
-        //}
-        //else if (navButtonR1.conLeft && navButtonR1.conRight && navButtonR1.conTop && navButtonR1.conBottom)
-        //{
+        // }
+        // else if (navButtonR1.conLeft && navButtonR1.conRight && navButtonR1.conTop && navButtonR1.conBottom)
+        // {
         //    navButtonR1.isOver = true;
             
         //    navButtonL1.draw();
@@ -262,9 +264,9 @@ void draw()
         //    navButtonR2.draw();
         //    navButtonR3.draw();
     
-        //}
-        //else if (navButtonR2.conLeft && navButtonR2.conRight && navButtonR2.conTop && navButtonR2.conBottom)
-        //{
+        // }
+        // else if (navButtonR2.conLeft && navButtonR2.conRight && navButtonR2.conTop && navButtonR2.conBottom)
+        // {
         //    navButtonR2.isOver = true;
         //    navButtonL1.draw();
         //    navButtonL2.draw();
@@ -272,9 +274,9 @@ void draw()
         //    navButtonR1.draw();
         //    navButtonR2.drawMouseOver();
         //    navButtonR3.draw();
-        //}
-        //else if (navButtonR3.conLeft && navButtonR3.conRight && navButtonR3.conTop && navButtonR3.conBottom)
-        //{
+        // }
+        // else if (navButtonR3.conLeft && navButtonR3.conRight && navButtonR3.conTop && navButtonR3.conBottom)
+        // {
         //    navButtonR3.isOver = true;
         //    navButtonL1.draw();
         //    navButtonL2.draw();
@@ -282,16 +284,16 @@ void draw()
         //    navButtonR1.draw();
         //    navButtonR2.draw();
         //    navButtonR3.drawMouseOver();
-        //}
-        //else
-        //{
+        // }
+        // else
+        // {
         //    navButtonL1.draw();
         //    navButtonL2.draw();
         //    navButtonL3.draw();
         //    navButtonR1.draw();
         //    navButtonR2.draw();
         //    navButtonR3.draw();
-        //}
+        // }
     
     } // end of study page
 
@@ -303,7 +305,6 @@ void draw()
         
         
         background(whatIsBackground);
-        fill(255);
         button.draw();
     }
     else if (jobsPage)
@@ -465,15 +466,15 @@ void mouseClicked() // calls when mouse is pressed.
 
 void switchPage(PImage _background)
 {
-    //if (_page == mainPage)
-    //{
-    //  mainPage = true;
-    //  studyPage = false;
-    //  whatIsPage = false;
-    //  jobsPage = false;
-    //  println("switch to mainPage");
-    //}
-     if (_background == studyBackground)
+    if (_background == mainBackground)
+    {
+     mainPage = true;
+     studyPage = false;
+     whatIsPage = false;
+     jobsPage = false;
+     println("switch to mainPage");
+    }
+    if (_background == studyBackground)
     {
       mainPage = false;
       studyPage = true;
@@ -500,5 +501,4 @@ void switchPage(PImage _background)
       println("switch to jobs page");
       bubbles = false;
     }
-    //println("switched to:");
 }

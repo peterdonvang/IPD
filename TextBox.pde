@@ -30,9 +30,9 @@ class TextBox
     xpos = _xpos;
     ypos = _ypos;
     boxColor = color(#485F83);
-    
+    fill(boxColor);
+    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     rectMode(CORNER);
-    boundingBox = createShape(RECT, ypos, xpos, tWidth, tHeight);
     
     // arrow
     lEndX = _lEndX;
@@ -45,16 +45,16 @@ class TextBox
     arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
     
     // conditions
+    // conLeft = mouseX >
   }
   
   void draw()
   {
-    fill(boxColor);
     shape(boundingBox);
     shape(arrow);
     shape(arrowHead);
-    fill(textColor);
     textSize(20);
+    fill(textColor);
     text(theText, 0, button.ypos - button.rad, tWidth, tHeight);
   }
   
