@@ -189,7 +189,6 @@ void draw()
         {
             if (key == '1')
             {
-              fill(cantinaBox.boxColor);
               cantinaBox.draw();
             }
             else if ( key == '2')
