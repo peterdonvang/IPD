@@ -1,0 +1,6 @@
+nav buttons disapear
+textbox er gennemsigtig
+nogen gange forsvinder knappen?
+scrolling box tager font størrelse fra textbox
+
+tag fat i textbox (grab over det hele) og swipe for at komme til naeste sted.
