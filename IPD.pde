@@ -174,51 +174,68 @@ void draw()
         background(mainBackground);
         button.draw();
     }
+    
     else if (studyPage)
     {
         background(studyBackground);
         //image(studyBackground, mouseX-screenwidth/2, 0); image you can drag with mouse
         //button.draw();
+        mapCantina = true;
+        println("cantina box");
         
-
-        if (keyPressed)
+        // check booleans for wich
+        if (mapCantina)
         {
-            if (key == '1')
-            {
-              cantinaBox.draw();
-              println("cantina box");
-            }
-            else if ( key == '2')
-            {
-                smallCafeBox.draw();
-                println("small cafe box");
-            }
-            else if ( key == '3')
-            {
-                libraryBox.draw();
-                println("library box");
-            }
-            else if ( key == '4')
-            {
-                bridgeBox.draw();
-                println("bridge box");
-            }
-            else if ( key == '5')
-            {
-                mirrorBox.draw();
-                println("mirror box");
-            }
-            else if ( key == '6')
-            {
-                studyHallBox.draw();
-                println("study hall box");
-            }  
-            
+            cantinaBox.draw();
+            mapSmallCafe = false;
+            mapLibrary = false;
+            mapBridge = false;
+            mapMirror = false;
+            mapStudyHall = false;
         }
+        else if (mapSmallCafe)
+        {
+            smallCafeBox.draw();
+            mapCantina = false;
+            mapLibrary = false;
+            mapBridge = false;
+            mapMirror = false;
+            mapStudyHall = false;
+        }
+        else if (mapLibrary)
+        {
+            libraryBox.draw();
+            mapCantina = false;
+            mapSmallCafe = false;
+            mapBridge = false;
+            mapMirror = false;
+            mapStudyHall = false;
+        }
+        else is (mapBridge)
+        {
+            bridgeBox.draw();
+        }
+        else if (mapMirror)
+        {
+            mirrorBox.draw();
+        }
+        else if (mapStudyHall)
+        {
+            studyHallBox.draw();
+        }
+        
+        if (cantinaBox.conLeft && cantinaBox.conRight && cantinaBox.conTop && cantinaBox.conBottom)
+        {
+            cantinaBox.isOver = true;
+        }
+        else 
+        {
+            cantinaBox.isOver = false;
+        }
+    
             
             
 
-        
         navButtonL1.isOver = false;
         
         // // check if over navigation buttons
@@ -296,6 +313,7 @@ void draw()
         // }
     
     } // end of study page
+        
 
     else if (whatIsPage)
     {
@@ -419,6 +437,11 @@ void mouseClicked() // calls when mouse is pressed.
           // *****************************animation goes here*********************** 
         bubbles = false;
     }
+
+    if (cantinaBox.isOver)
+    {
+        cantinaBox.xpos = mouseX;
+    }
   
   
     // switch pages
@@ -460,7 +483,6 @@ void mouseClicked() // calls when mouse is pressed.
             //println("stay on jobs page");
         }
     }
-     
     printBools(); 
 }
 

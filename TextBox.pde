@@ -13,11 +13,13 @@ class TextBox
   int lStartX, lStartY;
   int lEndX, lEndY;
   int headDiam;
+
   boolean conLeft;
   boolean conRight;
   boolean conTop;
   boolean conBottom;
-  
+  boolean isOver;
+
   TextBox(String _text, int _xpos, int _ypos, int _lEndX, int _lEndY)
   {
     // text
@@ -31,8 +33,8 @@ class TextBox
     ypos = _ypos;
     boxColor = color(#485F83);
     fill(boxColor);
-    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     rectMode(CORNER);
+    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     
     // arrow
     lEndX = _lEndX;
@@ -45,7 +47,11 @@ class TextBox
     arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
     
     // conditions
-    // conLeft = mouseX >
+    conLeft = mouseX > this.xpos;
+    conRight = mouseX < this.xpos + tWidth;
+    conTop = mouseY > this.ypos;
+    conBottom = mouseY < this.ypos + tHeight;
+
   }
   
   void draw()

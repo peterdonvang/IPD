@@ -190,51 +190,53 @@ public void draw()
         background(mainBackground);
         button.draw();
     }
+    
     else if (studyPage)
     {
         background(studyBackground);
         //image(studyBackground, mouseX-screenwidth/2, 0); image you can drag with mouse
         //button.draw();
-        
+        mapCantina = true;
+        println("cantina box");
 
-        if (keyPressed)
+        if ( key == '2')
         {
-            if (key == '1')
-            {
-              cantinaBox.draw();
-              println("cantina box");
-            }
-            else if ( key == '2')
-            {
-                smallCafeBox.draw();
-                println("small cafe box");
-            }
-            else if ( key == '3')
-            {
-                libraryBox.draw();
-                println("library box");
-            }
-            else if ( key == '4')
-            {
-                bridgeBox.draw();
-                println("bridge box");
-            }
-            else if ( key == '5')
-            {
-                mirrorBox.draw();
-                println("mirror box");
-            }
-            else if ( key == '6')
-            {
-                studyHallBox.draw();
-                println("study hall box");
-            }  
-            
+            smallCafeBox.draw();
+            println("small cafe box");
         }
+        else if ( key == '3')
+        {
+            libraryBox.draw();
+            println("library box");
+        }
+        else if ( key == '4')
+        {
+            bridgeBox.draw();
+            println("bridge box");
+        }
+        else if ( key == '5')
+        {
+            mirrorBox.draw();
+            println("mirror box");
+        }
+        else if ( key == '6')
+        {
+            studyHallBox.draw();
+            println("study hall box");
+        }  
+        
+        if (cantinaBox.conLeft && cantinaBox.conRight && cantinaBox.conTop && cantinaBox.conBottom)
+        {
+            cantinaBox.isOver = true;
+        }
+        else 
+        {
+            cantinaBox.isOver = false;
+        }
+    
             
             
 
-        
         navButtonL1.isOver = false;
         
         // // check if over navigation buttons
@@ -312,6 +314,7 @@ public void draw()
         // }
     
     } // end of study page
+        
 
     else if (whatIsPage)
     {
@@ -435,6 +438,11 @@ public void mouseClicked() // calls when mouse is pressed.
           // *****************************animation goes here*********************** 
         bubbles = false;
     }
+
+    if (cantinaBox.isOver)
+    {
+        cantinaBox.xpos = mouseX;
+    }
   
   
     // switch pages
@@ -476,7 +484,6 @@ public void mouseClicked() // calls when mouse is pressed.
             //println("stay on jobs page");
         }
     }
-     
     printBools(); 
 }
 
@@ -568,11 +575,13 @@ class TextBox
   int lStartX, lStartY;
   int lEndX, lEndY;
   int headDiam;
+
   boolean conLeft;
   boolean conRight;
   boolean conTop;
   boolean conBottom;
-  
+  boolean isOver;
+
   TextBox(String _text, int _xpos, int _ypos, int _lEndX, int _lEndY)
   {
     // text
@@ -586,8 +595,8 @@ class TextBox
     ypos = _ypos;
     boxColor = color(0xff485F83);
     fill(boxColor);
-    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     rectMode(CORNER);
+    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     
     // arrow
     lEndX = _lEndX;
@@ -600,7 +609,11 @@ class TextBox
     arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
     
     // conditions
-    // conLeft = mouseX >
+    conLeft = mouseX > this.xpos;
+    conRight = mouseX < this.xpos + tWidth;
+    conTop = mouseY > this.ypos;
+    conBottom = mouseY < this.ypos + tHeight;
+
   }
   
   public void draw()
