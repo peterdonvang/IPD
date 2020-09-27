@@ -5,12 +5,9 @@ static int inset = 130;
 static int buttonDiam = IPD.screenwidth / 3;
 static int screenMiddle = screenwidth / 2;
 
-
+// for swipe function
 int clickDown;
 int clickUp;
-
-boolean isLeft;
-boolean isRight;
 
 Button button;
 // study life -------------------------------------------------------
