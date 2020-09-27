@@ -29,10 +29,10 @@ Button navButtonR3;
 
 boolean navButtons;
 
-Button[] navButtons;
+//Button[] navButtons;
 
 
-int navButtonSpacing = 30;
+//int navButtonSpacing = 30;
 
 // containers for description arrays
 String[] cantinaArray;
@@ -109,7 +109,7 @@ void settings() // lets us use variables for size()
 void setup()
 {
     // instantiate
-    mainBackground = loadImage("PHmainBackgroun.png");
+    mainBackground = loadImage("PHmainBackground.png");
     button = new Button(screenwidth - inset, screenheight - inset, buttonDiam);
     
     // study Page-------------------------------------------
@@ -156,20 +156,20 @@ void setup()
     //}
     
     // make nav buttons and put in array
-    navButtonL1 = new Button(width/2 -navButtonSpacing/2, height-30, 20);
-    navButtonL2 = new Button(width/2 -3*navButtonSpacing/2, height-30, 20);
-    navButtonL3 = new Button(width/2 -5*navButtonSpacing/2, height-30, 20);
-    navButtonR1 = new Button(width/2 +navButtonSpacing/2, height-30, 20);
-    navButtonR2 = new Button(width/2 +3*navButtonSpacing/2, height-30, 20);
-    navButtonR3 = new Button(width/2 +5*navButtonSpacing/2, height-30, 20);
-    navButtons = new Button[noOfPlaces];
+    //navButtonL1 = new Button(width/2 -navButtonSpacing/2, height-30, 20);
+    //navButtonL2 = new Button(width/2 -3*navButtonSpacing/2, height-30, 20);
+    //navButtonL3 = new Button(width/2 -5*navButtonSpacing/2, height-30, 20);
+    //navButtonR1 = new Button(width/2 +navButtonSpacing/2, height-30, 20);
+    //navButtonR2 = new Button(width/2 +3*navButtonSpacing/2, height-30, 20);
+    //navButtonR3 = new Button(width/2 +5*navButtonSpacing/2, height-30, 20);
+    //navButtons = new Button[noOfPlaces];
     
-    navButtons[0] = navButtonL1;
-    navButtons[1] = navButtonL2;
-    navButtons[2] = navButtonL3;
-    navButtons[3] = navButtonR1;
-    navButtons[4] = navButtonR2;
-    navButtons[5] = navButtonR3;
+    //navButtons[0] = navButtonL1;
+    //navButtons[1] = navButtonL2;
+    //navButtons[2] = navButtonL3;
+    //navButtons[3] = navButtonR1;
+    //navButtons[4] = navButtonR2;
+    //navButtons[5] = navButtonR3;
 
     // jobs page----------------------------------------------
     jobsBackground = loadImage("PHjobsBackground.png");
@@ -189,6 +189,7 @@ void setup()
     studyBubble = new Bubble(inset, button.ypos, button.diam - 15, button.diam - 15);
     whatIsBubble = new Bubble(screenwidth / 3, screenheight / 2, button.diam - 15, button.diam - 15);
     jobsBubble = new Bubble(button.xpos, screenheight/2, button.diam - 15, button.diam - 15);
+    // rulletexter
     scrollingBox = new ScrollingBox();
     
     
@@ -217,7 +218,7 @@ void draw()
 
 
         
-        navButtonL1.isOver = false;
+        //navButtonL1.isOver = false;
         // // check if over navigation buttons
         // if (navButtonL1.conLeft && navButtonL1.conRight && navButtonL1.conTop && navButtonL1.conBottom)
         // {
@@ -348,6 +349,7 @@ void draw()
     if (button.conLeft && button.conRight && button.conTop && button.conBottom)
     {
         button.isOver = true;
+        println("is over buton");
     }   
     
     else
@@ -408,9 +410,6 @@ void printBools()
   //println("___________________");
 }
 
-
-
-
 void mousePressed() // mouse down
 {
   if (studyPage)
@@ -446,10 +445,10 @@ void mouseReleased()
   {  
     for (int i = 0; i< textBoxes.length; i++)
     {
-      if (textBoxes[i].xpos > screenMiddle)
-      {
-        textBoxes[i+1].isActive = true;
-      }
+      //if (textBoxes[i].xpos > screenMiddle)
+      //{
+      //  textBoxes[i+1].isActive = true;
+      //}
     }
     //clickUp = mouseX;
     //if (clickDown

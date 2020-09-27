@@ -21,12 +21,9 @@ static int inset = 130;
 static int buttonDiam = IPD.screenwidth / 3;
 static int screenMiddle = screenwidth / 2;
 
-
+// for swipe function
 int clickDown;
 int clickUp;
-
-boolean isLeft;
-boolean isRight;
 
 Button button;
 // study life -------------------------------------------------------
@@ -45,7 +42,11 @@ Button navButtonL3;
 Button navButtonR1;
 Button navButtonR2;
 Button navButtonR3;
+
 boolean navButtons;
+
+Button[] navButtons;
+
 
 int navButtonSpacing = 30;
 
@@ -124,7 +125,7 @@ public void settings() // lets us use variables for size()
 public void setup()
 {
     // instantiate
-    mainBackground = loadImage("PHmainBackground.png");
+    mainBackground = loadImage("PHmainBackgroun.png");
     button = new Button(screenwidth - inset, screenheight - inset, buttonDiam);
     
     // study Page-------------------------------------------
@@ -177,7 +178,7 @@ public void setup()
     navButtonR1 = new Button(width/2 +navButtonSpacing/2, height-30, 20);
     navButtonR2 = new Button(width/2 +3*navButtonSpacing/2, height-30, 20);
     navButtonR3 = new Button(width/2 +5*navButtonSpacing/2, height-30, 20);
-    Button[] navButtons = new Button[noOfPlaces];
+    navButtons = new Button[noOfPlaces];
     
     navButtons[0] = navButtonL1;
     navButtons[1] = navButtonL2;
@@ -204,6 +205,7 @@ public void setup()
     studyBubble = new Bubble(inset, button.ypos, button.diam - 15, button.diam - 15);
     whatIsBubble = new Bubble(screenwidth / 3, screenheight / 2, button.diam - 15, button.diam - 15);
     jobsBubble = new Bubble(button.xpos, screenheight/2, button.diam - 15, button.diam - 15);
+    // rulletexter
     scrollingBox = new ScrollingBox();
     
     
@@ -221,24 +223,18 @@ public void draw()
     else if (studyPage)
     {
         background(studyBackground);
-        //image(studyBackground, mouseX-screenwidth/2, 0); image you can drag with mouse
-        //button.draw();
-        //mapCantina = true;
-        //cantinaBox.draw();
         
-        
-        mapPage(bridgeBox);
-        //for (int i = 0; i < textBoxes.length; i++)
-        //{
-        //  if (textBoxes[i].isActive)
-        //  {
-        //    textBoxes[i].draw();
-        //  }
-        //  //textBoxes[i].draw();
-        //}
+        for (int i = 0; i < textBoxes.length; i++)
+        {
+          if (textBoxes[i].isActive)
+          {
+            textBoxes[i].draw();
+          }
+        }
+
+
         
         navButtonL1.isOver = false;
-        
         // // check if over navigation buttons
         // if (navButtonL1.conLeft && navButtonL1.conRight && navButtonL1.conTop && navButtonL1.conBottom)
         // {
@@ -369,6 +365,7 @@ public void draw()
     if (button.conLeft && button.conRight && button.conTop && button.conBottom)
     {
         button.isOver = true;
+        println("is over buton");
     }   
     
     else
@@ -429,9 +426,6 @@ public void printBools()
   //println("___________________");
 }
 
-
-
-
 public void mousePressed() // mouse down
 {
   if (studyPage)
@@ -484,7 +478,7 @@ public void mouseReleased()
   }  
 }
 
-public void mapPage(TextBox _textBox)
+public void switchPlace(TextBox _textBox)
 {
   for (int i = 0; i < textBoxes.length ; i++)
   {
@@ -492,7 +486,7 @@ public void mapPage(TextBox _textBox)
     if (textBoxes[i] == _textBox) // find the one we want;
     {
       textBoxes[i].isActive = true; // set that to true;
-      textBoxes[i].draw();
+      // textBoxes[i].draw();
     }
   }
 }
