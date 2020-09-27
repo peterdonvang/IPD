@@ -3,6 +3,14 @@ static int screenwidth = 595;
 static int screenheight = 842;
 static int inset = 130;
 static int buttonDiam = IPD.screenwidth / 3;
+static int screenMiddle = screenwidth / 2;
+
+
+int clickDown;
+int clickUp;
+
+boolean isLeft;
+boolean isRight;
 
 Button button;
 // study life -------------------------------------------------------
@@ -12,6 +20,7 @@ TextBox libraryBox;
 TextBox bridgeBox;
 TextBox mirrorBox;
 TextBox studyHallBox;
+TextBox[] textBoxes;
 
 //nav buttons
 Button navButtonL1;
@@ -20,7 +29,11 @@ Button navButtonL3;
 Button navButtonR1;
 Button navButtonR2;
 Button navButtonR3;
+
 boolean navButtons;
+
+Button[] navButtons;
+
 
 int navButtonSpacing = 30;
 
@@ -99,7 +112,7 @@ void settings() // lets us use variables for size()
 void setup()
 {
     // instantiate
-    mainBackground = loadImage("PHmainBackground.png");
+    mainBackground = loadImage("PHmainBackgroun.png");
     button = new Button(screenwidth - inset, screenheight - inset, buttonDiam);
     
     // study Page-------------------------------------------
@@ -120,12 +133,30 @@ void setup()
     bridgeText = join(bridgeArray, "\n");
     cantinaText = join(cantinaArray, "\n");
     studyHallText = join (studyHallArray, "\n");
+    
     cantinaBox = new TextBox(cantinaText, 10, button.ypos - button.rad, cantinaX, cantinaY); // xpos, ypos, lineEndX, lineEndY
     smallCafeBox = new TextBox(smallCafeText, 10, button.ypos - button.rad, smallCafeX, smallCafeY);
     libraryBox = new TextBox(libraryText, 10, button.ypos - button.rad, libraryX, libraryY);
     bridgeBox = new TextBox(bridgeText, 10, button.ypos - button.rad, bridgeX, bridgeY);
     mirrorBox = new TextBox(mirrorText, 10, button.ypos - button.rad, mirrorX, mirrorY);
     studyHallBox = new TextBox(studyHallText, 10, button.ypos - button.rad, studyHallX, studyHallY);
+    
+    // put text boxes into array 
+    textBoxes = new TextBox[noOfPlaces];
+    textBoxes[0] = cantinaBox;
+    textBoxes[1] = smallCafeBox;
+    textBoxes[2] = libraryBox;
+    textBoxes[3] = bridgeBox;
+    textBoxes[4] = mirrorBox;
+    textBoxes[5] = studyHallBox;
+    
+    //// set each text box x position
+    //for (int i= 0; i < textBoxes.length; i++)
+    //{
+    //  textBoxes[i].xpos += i*2;
+    //  textBoxes[i].initPos = textBoxes[i].xpos;
+    //  println(textBoxes[i].xpos);
+    //}
     
     // make nav buttons and put in array
     navButtonL1 = new Button(width/2 -navButtonSpacing/2, height-30, 20);
@@ -134,7 +165,7 @@ void setup()
     navButtonR1 = new Button(width/2 +navButtonSpacing/2, height-30, 20);
     navButtonR2 = new Button(width/2 +3*navButtonSpacing/2, height-30, 20);
     navButtonR3 = new Button(width/2 +5*navButtonSpacing/2, height-30, 20);
-    Button[] navButtons = new Button[noOfPlaces];
+    navButtons = new Button[noOfPlaces];
     
     navButtons[0] = navButtonL1;
     navButtons[1] = navButtonL2;
@@ -178,66 +209,18 @@ void draw()
     else if (studyPage)
     {
         background(studyBackground);
-        //image(studyBackground, mouseX-screenwidth/2, 0); image you can drag with mouse
-        //button.draw();
-        mapCantina = true;
-        println("cantina box");
         
-        // check booleans for wich
-        if (mapCantina)
+        for (int i = 0; i < textBoxes.length; i++)
         {
-            cantinaBox.draw();
-            mapSmallCafe = false;
-            mapLibrary = false;
-            mapBridge = false;
-            mapMirror = false;
-            mapStudyHall = false;
+          if (textBoxes[i].isActive)
+          {
+            textBoxes[i].draw();
+          }
         }
-        else if (mapSmallCafe)
-        {
-            smallCafeBox.draw();
-            mapCantina = false;
-            mapLibrary = false;
-            mapBridge = false;
-            mapMirror = false;
-            mapStudyHall = false;
-        }
-        else if (mapLibrary)
-        {
-            libraryBox.draw();
-            mapCantina = false;
-            mapSmallCafe = false;
-            mapBridge = false;
-            mapMirror = false;
-            mapStudyHall = false;
-        }
-        else is (mapBridge)
-        {
-            bridgeBox.draw();
-        }
-        else if (mapMirror)
-        {
-            mirrorBox.draw();
-        }
-        else if (mapStudyHall)
-        {
-            studyHallBox.draw();
-        }
-        
-        if (cantinaBox.conLeft && cantinaBox.conRight && cantinaBox.conTop && cantinaBox.conBottom)
-        {
-            cantinaBox.isOver = true;
-        }
-        else 
-        {
-            cantinaBox.isOver = false;
-        }
-    
-            
-            
 
-        navButtonL1.isOver = false;
+
         
+        navButtonL1.isOver = false;
         // // check if over navigation buttons
         // if (navButtonL1.conLeft && navButtonL1.conRight && navButtonL1.conTop && navButtonL1.conBottom)
         // {
@@ -368,11 +351,15 @@ void draw()
     if (button.conLeft && button.conRight && button.conTop && button.conBottom)
     {
         button.isOver = true;
-    }     
+    }   
     
     else
     {
         button.isOver = false;
+    }
+    if (studyPage)
+    {
+      
     }
 
     if (bubbles)
@@ -424,25 +411,92 @@ void printBools()
   //println("___________________");
 }
 
-void mouseClicked() // calls when mouse is pressed.
+
+
+
+void mousePressed() // mouse down
 {
+  if (studyPage)
+  {
+    clickDown = mouseX;
+    //isLeft = mouseX < screenwidth / 2;
+    //isRight = mouseX > screenwidth / 2;
+    println("clickdown: ", clickDown);
+    //for (int i = 0; i< textBoxes.length ; i++)
+    //{
+    //  //if (textBoxes[i].leftSide)
+    //  //{
+        
+    //  //}
+    //}
+  }
+ 
+
+}
+
+void mouseDragged() // while mouse is down and dragging
+{    
+     //// textbox follows mouse position
+     for (int i = 0; i < textBoxes.length; i++)
+     {
+         textBoxes[i].xpos += mouseX+textBoxes[i].initPos;
+     }
+}
+
+void mouseReleased()
+{
+  if (studyPage)
+  {  
+    for (int i = 0; i< textBoxes.length; i++)
+    {
+      if (textBoxes[i].xpos > screenMiddle)
+      {
+        textBoxes[i+1].isActive = true;
+      }
+    }
+    //clickUp = mouseX;
+    //if (clickDown
+    //int mouseTraveled = clickUp-clickDown;
+  //  for (int i = 0; i< textBoxes.length ; i++)
+  //  {
+  //    textBoxes[i].xpos += mouseTraveled;
+  //    println(textBoxes[i].xpos);
+  //  }
+  //}
+  }  
+}
+
+void switchPlace(TextBox _textBox)
+{
+  for (int i = 0; i < textBoxes.length ; i++)
+  {
+    textBoxes[i].isActive = false; // set all booleans to false;
+    if (textBoxes[i] == _textBox) // find the one we want;
+    {
+      textBoxes[i].isActive = true; // set that to true;
+      // textBoxes[i].draw();
+    }
+  }
+}
+
+void mouseClicked() // calls when mouse goes up AND down
+{
+  if (studyPage)
+  {
+     
+  }
     //toggle bubbles
     if (button.isOver && !bubbles)
     {
         bubbles = true;
         // *****************************animation goes here***********************
         println("bubbles out");
-    }   else if (button.isOver && bubbles)
+    }   
+    else if (button.isOver && bubbles)
     {
           // *****************************animation goes here*********************** 
         bubbles = false;
     }
-
-    if (cantinaBox.isOver)
-    {
-        cantinaBox.xpos = mouseX;
-    }
-  
   
     // switch pages
     if (studyBubble.isOver)
@@ -485,6 +539,8 @@ void mouseClicked() // calls when mouse is pressed.
     }
     printBools(); 
 }
+
+//void switchplace(
 
 void switchPage(PImage _background)
 {

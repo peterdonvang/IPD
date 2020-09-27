@@ -1,5 +1,5 @@
 nav buttons disapear
-textbox er gennemsigtig
+textbox er gennemsigtig//////
 nogen gange forsvinder knappen?
 scrolling box tager font størrelse fra textbox
 

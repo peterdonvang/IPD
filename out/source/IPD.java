@@ -19,6 +19,14 @@ static int screenwidth = 595;
 static int screenheight = 842;
 static int inset = 130;
 static int buttonDiam = IPD.screenwidth / 3;
+static int screenMiddle = screenwidth / 2;
+
+
+int clickDown;
+int clickUp;
+
+boolean isLeft;
+boolean isRight;
 
 Button button;
 // study life -------------------------------------------------------
@@ -28,6 +36,7 @@ TextBox libraryBox;
 TextBox bridgeBox;
 TextBox mirrorBox;
 TextBox studyHallBox;
+TextBox[] textBoxes;
 
 //nav buttons
 Button navButtonL1;
@@ -136,12 +145,30 @@ public void setup()
     bridgeText = join(bridgeArray, "\n");
     cantinaText = join(cantinaArray, "\n");
     studyHallText = join (studyHallArray, "\n");
+    
     cantinaBox = new TextBox(cantinaText, 10, button.ypos - button.rad, cantinaX, cantinaY); // xpos, ypos, lineEndX, lineEndY
     smallCafeBox = new TextBox(smallCafeText, 10, button.ypos - button.rad, smallCafeX, smallCafeY);
     libraryBox = new TextBox(libraryText, 10, button.ypos - button.rad, libraryX, libraryY);
     bridgeBox = new TextBox(bridgeText, 10, button.ypos - button.rad, bridgeX, bridgeY);
     mirrorBox = new TextBox(mirrorText, 10, button.ypos - button.rad, mirrorX, mirrorY);
     studyHallBox = new TextBox(studyHallText, 10, button.ypos - button.rad, studyHallX, studyHallY);
+    
+    // put text boxes into array 
+    textBoxes = new TextBox[noOfPlaces];
+    textBoxes[0] = cantinaBox;
+    textBoxes[1] = smallCafeBox;
+    textBoxes[2] = libraryBox;
+    textBoxes[3] = bridgeBox;
+    textBoxes[4] = mirrorBox;
+    textBoxes[5] = studyHallBox;
+    
+    //// set each text box x position
+    //for (int i= 0; i < textBoxes.length; i++)
+    //{
+    //  textBoxes[i].xpos += i*2;
+    //  textBoxes[i].initPos = textBoxes[i].xpos;
+    //  println(textBoxes[i].xpos);
+    //}
     
     // make nav buttons and put in array
     navButtonL1 = new Button(width/2 -navButtonSpacing/2, height-30, 20);
@@ -196,47 +223,20 @@ public void draw()
         background(studyBackground);
         //image(studyBackground, mouseX-screenwidth/2, 0); image you can drag with mouse
         //button.draw();
-        mapCantina = true;
-        println("cantina box");
-
-        if ( key == '2')
-        {
-            smallCafeBox.draw();
-            println("small cafe box");
-        }
-        else if ( key == '3')
-        {
-            libraryBox.draw();
-            println("library box");
-        }
-        else if ( key == '4')
-        {
-            bridgeBox.draw();
-            println("bridge box");
-        }
-        else if ( key == '5')
-        {
-            mirrorBox.draw();
-            println("mirror box");
-        }
-        else if ( key == '6')
-        {
-            studyHallBox.draw();
-            println("study hall box");
-        }  
+        //mapCantina = true;
+        //cantinaBox.draw();
         
-        if (cantinaBox.conLeft && cantinaBox.conRight && cantinaBox.conTop && cantinaBox.conBottom)
-        {
-            cantinaBox.isOver = true;
-        }
-        else 
-        {
-            cantinaBox.isOver = false;
-        }
-    
-            
-            
-
+        
+        mapPage(bridgeBox);
+        //for (int i = 0; i < textBoxes.length; i++)
+        //{
+        //  if (textBoxes[i].isActive)
+        //  {
+        //    textBoxes[i].draw();
+        //  }
+        //  //textBoxes[i].draw();
+        //}
+        
         navButtonL1.isOver = false;
         
         // // check if over navigation buttons
@@ -369,11 +369,15 @@ public void draw()
     if (button.conLeft && button.conRight && button.conTop && button.conBottom)
     {
         button.isOver = true;
-    }     
+    }   
     
     else
     {
         button.isOver = false;
+    }
+    if (studyPage)
+    {
+      
     }
 
     if (bubbles)
@@ -425,25 +429,92 @@ public void printBools()
   //println("___________________");
 }
 
-public void mouseClicked() // calls when mouse is pressed.
+
+
+
+public void mousePressed() // mouse down
 {
+  if (studyPage)
+  {
+    clickDown = mouseX;
+    //isLeft = mouseX < screenwidth / 2;
+    //isRight = mouseX > screenwidth / 2;
+    println("clickdown: ", clickDown);
+    //for (int i = 0; i< textBoxes.length ; i++)
+    //{
+    //  //if (textBoxes[i].leftSide)
+    //  //{
+        
+    //  //}
+    //}
+  }
+ 
+
+}
+
+public void mouseDragged() // while mouse is down and dragging
+{    
+     //// textbox follows mouse position
+     for (int i = 0; i < textBoxes.length; i++)
+     {
+         textBoxes[i].xpos += mouseX+textBoxes[i].initPos;
+     }
+}
+
+public void mouseReleased()
+{
+  if (studyPage)
+  {  
+    for (int i = 0; i< textBoxes.length; i++)
+    {
+      if (textBoxes[i].xpos > screenMiddle)
+      {
+        textBoxes[i+1].isActive = true;
+      }
+    }
+    //clickUp = mouseX;
+    //if (clickDown
+    //int mouseTraveled = clickUp-clickDown;
+  //  for (int i = 0; i< textBoxes.length ; i++)
+  //  {
+  //    textBoxes[i].xpos += mouseTraveled;
+  //    println(textBoxes[i].xpos);
+  //  }
+  //}
+  }  
+}
+
+public void mapPage(TextBox _textBox)
+{
+  for (int i = 0; i < textBoxes.length ; i++)
+  {
+    textBoxes[i].isActive = false; // set all booleans to false;
+    if (textBoxes[i] == _textBox) // find the one we want;
+    {
+      textBoxes[i].isActive = true; // set that to true;
+      textBoxes[i].draw();
+    }
+  }
+}
+
+public void mouseClicked() // calls when mouse goes up AND down
+{
+  if (studyPage)
+  {
+     
+  }
     //toggle bubbles
     if (button.isOver && !bubbles)
     {
         bubbles = true;
         // *****************************animation goes here***********************
         println("bubbles out");
-    }   else if (button.isOver && bubbles)
+    }   
+    else if (button.isOver && bubbles)
     {
           // *****************************animation goes here*********************** 
         bubbles = false;
     }
-
-    if (cantinaBox.isOver)
-    {
-        cantinaBox.xpos = mouseX;
-    }
-  
   
     // switch pages
     if (studyBubble.isOver)
@@ -486,6 +557,8 @@ public void mouseClicked() // calls when mouse is pressed.
     }
     printBools(); 
 }
+
+//void switchplace(
 
 public void switchPage(PImage _background)
 {
@@ -575,13 +648,12 @@ class TextBox
   int lStartX, lStartY;
   int lEndX, lEndY;
   int headDiam;
+  int finalXpos = 10;
+  int initPos;
+  
+  boolean isActive;
 
-  boolean conLeft;
-  boolean conRight;
-  boolean conTop;
-  boolean conBottom;
-  boolean isOver;
-
+  
   TextBox(String _text, int _xpos, int _ypos, int _lEndX, int _lEndY)
   {
     // text
@@ -594,9 +666,7 @@ class TextBox
     xpos = _xpos;
     ypos = _ypos;
     boxColor = color(0xff485F83);
-    fill(boxColor);
-    rectMode(CORNER);
-    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
+    
     
     // arrow
     lEndX = _lEndX;
@@ -605,31 +675,34 @@ class TextBox
     lStartY = ypos;
     headDiam = 10;
     stroke(boxColor);
-    arrow = createShape(LINE, lStartX, lStartY, lEndX, lEndY);
-    arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
-    
-    // conditions
-    conLeft = mouseX > this.xpos;
-    conRight = mouseX < this.xpos + tWidth;
-    conTop = mouseY > this.ypos;
-    conBottom = mouseY < this.ypos + tHeight;
-
   }
   
   public void draw()
   {
+    fill(boxColor);
+    
+    rectMode(CORNER);
+    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     shape(boundingBox);
-    shape(arrow);
-    shape(arrowHead);
+    
     textSize(20);
     fill(textColor);
-    text(theText, 0, button.ypos - button.rad, tWidth, tHeight);
-  }
-  
-  public void clicked()
-  {
+    text(theText, xpos, button.ypos - button.rad, tWidth, tHeight);
+    if (isActive)
+    {
+      drawArrow();
+    }
     
   }
+  public void drawArrow()
+  {
+    arrow = createShape(LINE, lStartX, lStartY, lEndX, lEndY);
+    shape(arrow);
+
+    arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
+    shape(arrowHead);
+  }
+  
 }
 class Bubble
 {

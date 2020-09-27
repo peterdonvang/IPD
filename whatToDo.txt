@@ -1,0 +1,3 @@
+try swipe thing with only two page for now. 
+Disable array. 
+set only one to active

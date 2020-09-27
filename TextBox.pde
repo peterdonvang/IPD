@@ -13,13 +13,12 @@ class TextBox
   int lStartX, lStartY;
   int lEndX, lEndY;
   int headDiam;
+  int finalXpos = 10;
+  int initPos;
+  
+  boolean isActive;
 
-  boolean conLeft;
-  boolean conRight;
-  boolean conTop;
-  boolean conBottom;
-  boolean isOver;
-
+  
   TextBox(String _text, int _xpos, int _ypos, int _lEndX, int _lEndY)
   {
     // text
@@ -32,9 +31,7 @@ class TextBox
     xpos = _xpos;
     ypos = _ypos;
     boxColor = color(#485F83);
-    fill(boxColor);
-    rectMode(CORNER);
-    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
+    
     
     // arrow
     lEndX = _lEndX;
@@ -43,29 +40,32 @@ class TextBox
     lStartY = ypos;
     headDiam = 10;
     stroke(boxColor);
-    arrow = createShape(LINE, lStartX, lStartY, lEndX, lEndY);
-    arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
-    
-    // conditions
-    conLeft = mouseX > this.xpos;
-    conRight = mouseX < this.xpos + tWidth;
-    conTop = mouseY > this.ypos;
-    conBottom = mouseY < this.ypos + tHeight;
-
   }
   
   void draw()
   {
+    fill(boxColor);
+    
+    rectMode(CORNER);
+    boundingBox = createShape(RECT, xpos, ypos, tWidth, tHeight);
     shape(boundingBox);
-    shape(arrow);
-    shape(arrowHead);
+    
     textSize(20);
     fill(textColor);
-    text(theText, 0, button.ypos - button.rad, tWidth, tHeight);
-  }
-  
-  void clicked()
-  {
+    text(theText, xpos, button.ypos - button.rad, tWidth, tHeight);
+    if (isActive)
+    {
+      drawArrow();
+    }
     
   }
+  void drawArrow()
+  {
+    arrow = createShape(LINE, lStartX, lStartY, lEndX, lEndY);
+    shape(arrow);
+
+    arrowHead = createShape(ELLIPSE, lEndX, lEndY, headDiam, headDiam);
+    shape(arrowHead);
+  }
+  
 }
